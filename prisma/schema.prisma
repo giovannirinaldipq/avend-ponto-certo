@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  nome         String
+  email        String   @unique
+  senha        String
+  cpfCnpj      String   @unique
+  telefone     String
+  role         String   @default("INDICADOR")
+  chavePix     String?
+  tipoChavePix String?
+  tier         String   @default("BRONZE")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  indicacoes   Indicacao[]
+  pagamentos   Pagamento[]
+  comunicacoes Comunicacao[]
+  notificacoes Notificacao[]
+}
+
+model Indicacao {
+  id                   String   @id @default(cuid())
+  indicadorId          String
+  indicador            User     @relation(fields: [indicadorId], references: [id])
+  nomeEstabelecimento  String
+  endereco             String
+  cidade               String
+  estado               String
+  latitude             Float?
+  longitude            Float?
+  tipoLocal            String
+  horarioFuncionamento String
+  fluxoPessoas         String
+  nomeDecissor         String
+  telefoneDecissor     String
+  cargoDecissor        String?
+  interesseDecissor    String
+  fotos                String   @default("[]")
+  temEspaco            String
+  temEnergia           String
+  temConcorrente       Boolean
+  score                Int
+  status               String   @default("INDICADO")
+  dataInstalacao       DateTime?
+  faturamentoMensal    Float?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  pagamentos Pagamento[]
+  comunicacoes Comunicacao[]
+}
+
+model Pagamento {
+  id             String    @id @default(cuid())
+  indicacaoId    String
+  indicacao      Indicacao @relation(fields: [indicacaoId], references: [id])
+  indicadorId    String
+  indicador      User      @relation(fields: [indicadorId], references: [id])
+  tipo           String
+  valor          Float
+  mesReferencia  String?
+  comprovanteUrl String?
+  pago           Boolean   @default(false)
+  dataPagamento  DateTime?
+  createdAt      DateTime  @default(now())
+}
+
+model Comunicacao {
+  id          String    @id @default(cuid())
+  indicacaoId String
+  indicacao   Indicacao @relation(fields: [indicacaoId], references: [id])
+  autorId     String
+  autor       User      @relation(fields: [autorId], references: [id])
+  tipo        String    // NOTA, LIGACAO, VISITA, EMAIL, WHATSAPP
+  mensagem    String
+  createdAt   DateTime  @default(now())
+}
+
+model Notificacao {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  tipo      String   // STATUS_ALTERADO, PAGAMENTO, SISTEMA
+  titulo    String
+  mensagem  String
+  lida      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+}
