@@ -29,12 +29,12 @@ export async function GET(request: NextRequest) {
   });
 
   const totalPago = pagamentos
-    .filter((p) => p.pago)
-    .reduce((sum, p) => sum + p.valor, 0);
+    .filter((p: { pago: boolean }) => p.pago)
+    .reduce((sum: number, p: { valor: number }) => sum + p.valor, 0);
 
   const totalPendente = pagamentos
-    .filter((p) => !p.pago)
-    .reduce((sum, p) => sum + p.valor, 0);
+    .filter((p: { pago: boolean }) => !p.pago)
+    .reduce((sum: number, p: { valor: number }) => sum + p.valor, 0);
 
   return NextResponse.json({ pagamentos, totalPago, totalPendente });
 }
