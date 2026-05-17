@@ -123,7 +123,7 @@ export default function ParceriaDetalhePage() {
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-navy">{parceria.nomeEmpresa}</h1>
             <span className="text-xs px-2 py-1 rounded-full bg-zinc-100 text-muted font-medium">
-              {parceria.tipo === "REDE" ? "Rede Escalável" : "Parceiro Geral"}
+              {parceria.tipo === "REDE" ? "Pontos em Escala" : "Parceria Geral"}
             </span>
           </div>
           <p className="text-sm text-muted mt-1">Cadastrada em {new Date(parceria.createdAt).toLocaleDateString("pt-BR")}</p>

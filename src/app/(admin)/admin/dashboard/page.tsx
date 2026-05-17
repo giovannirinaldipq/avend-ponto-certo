@@ -21,12 +21,17 @@ type Metricas = {
 export default function AdminDashboardPage() {
   const [metricas, setMetricas] = useState<Metricas | null>(null);
   const [loading, setLoading] = useState(true);
+  const [aguardandoFranqueado, setAguardandoFranqueado] = useState(0);
 
   useEffect(() => {
     fetch("/api/metricas")
       .then((r) => r.json())
       .then((d) => setMetricas(d))
       .finally(() => setLoading(false));
+    fetch("/api/indicacoes?status=AGUARDANDO_FRANQUEADO&all=true")
+      .then((r) => r.json())
+      .then((d) => setAguardandoFranqueado(d.total || 0))
+      .catch(() => {});
   }, []);
 
   if (loading || !metricas) {
@@ -105,6 +110,27 @@ export default function AdminDashboardPage() {
           <p className="text-xs text-muted mt-1">máquinas ativas</p>
         </div>
       </div>
+
+      {/* Card Disponíveis para Franqueado */}
+      {aguardandoFranqueado > 0 && (
+        <a href="/admin/pipeline" className="card p-5 flex items-center justify-between border-2 border-secondary/30 bg-secondary/5 hover:bg-secondary/10 transition-all animate-fade-in">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-secondary/20 flex items-center justify-center">
+              <span className="text-2xl">🏪</span>
+            </div>
+            <div>
+              <p className="font-semibold text-navy">Pontos disponíveis para franqueados</p>
+              <p className="text-xs text-muted mt-0.5">Pontos negociados e prontos para operar — só falta alocar um franqueado</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-3xl font-bold text-secondary">{aguardandoFranqueado}</span>
+            <svg className="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </a>
+      )}
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

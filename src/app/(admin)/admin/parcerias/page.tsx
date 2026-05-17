@@ -41,7 +41,7 @@ export default function ParceriasPage() {
       {/* Header */}
       <div className="animate-fade-in">
         <h1 className="text-2xl font-bold text-navy">Parcerias</h1>
-        <p className="text-sm text-muted mt-0.5">Gestão de parcerias comerciais e redes escaláveis</p>
+        <p className="text-sm text-muted mt-0.5">Gestão de parcerias comerciais e pontos em escala</p>
       </div>
 
       {/* Tabs */}
@@ -50,7 +50,7 @@ export default function ParceriasPage() {
           onClick={() => setTab("GERAL")}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${tab === "GERAL" ? "bg-primary/10 text-primary-dark" : "text-muted hover:bg-zinc-100"}`}
         >
-          Parceiros Gerais
+          Parcerias Gerais
           <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full bg-zinc-200 text-muted font-bold">
             {data?.parcerias?.filter((p) => p.tipo === "GERAL").length || 0}
           </span>
@@ -59,7 +59,7 @@ export default function ParceriasPage() {
           onClick={() => setTab("REDE")}
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${tab === "REDE" ? "bg-primary/10 text-primary-dark" : "text-muted hover:bg-zinc-100"}`}
         >
-          Redes Escaláveis
+          Pontos em Escala
           <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full bg-zinc-200 text-muted font-bold">
             {data?.parcerias?.filter((p) => p.tipo === "REDE").length || 0}
           </span>
@@ -68,7 +68,7 @@ export default function ParceriasPage() {
 
       {/* Lista */}
       {parcerias.length === 0 ? (
-        <p className="text-sm text-muted py-8 text-center">Nenhuma parceria {tab === "GERAL" ? "geral" : "de rede"} cadastrada.</p>
+        <p className="text-sm text-muted py-8 text-center">Nenhuma parceria {tab === "GERAL" ? "geral" : "de pontos em escala"} cadastrada.</p>
       ) : (
         <div className="space-y-3">
           {parcerias.map((p) => (
