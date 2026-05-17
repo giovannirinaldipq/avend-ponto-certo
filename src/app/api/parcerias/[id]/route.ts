@@ -3,6 +3,34 @@ import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { PARCERIA_STATUS_LABELS } from "@/lib/constants";
 
+export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  }
+
+  const { id } = await params;
+
+  const parceria = await prisma.parceria.findUnique({
+    where: { id },
+    include: {
+      unidades: { orderBy: { createdAt: "desc" } },
+      historico: { orderBy: { createdAt: "desc" } },
+    },
+  });
+
+  if (!parceria) {
+    return NextResponse.json({ error: "Parceria não encontrada" }, { status: 404 });
+  }
+
+  // Captador só pode ver parcerias que ele indicou
+  if (session.role === "INDICADOR" && parceria.indicadorId !== session.id) {
+    return NextResponse.json({ error: "Acesso negado" }, { status: 403 });
+  }
+
+  return NextResponse.json({ parceria });
+}
+
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
   if (!session || session.role !== "ADMIN") {
