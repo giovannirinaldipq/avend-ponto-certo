@@ -21,6 +21,7 @@ type Indicacao = {
   latitude: number | null;
   longitude: number | null;
   createdAt: string;
+  franqueado: string | null;
   indicador: { nome: string; email: string; tier: string };
 };
 
@@ -104,11 +105,130 @@ function AlertCard({ alerts }: { alerts: { message: string; type: "warning" | "d
   );
 }
 
+function DisponiveisView({
+  indicacoes,
+  franqueadoEdit,
+  setFranqueadoEdit,
+  actionLoading,
+  onAlocar,
+}: {
+  indicacoes: Indicacao[];
+  franqueadoEdit: { id: string; value: string } | null;
+  setFranqueadoEdit: (v: { id: string; value: string } | null) => void;
+  actionLoading: boolean;
+  onAlocar: (id: string, franqueado: string) => void;
+}) {
+  // Agrupar por cidade
+  const porCidade = new Map<string, Indicacao[]>();
+  indicacoes.forEach((i) => {
+    const key = `${i.cidade}/${i.estado}`;
+    if (!porCidade.has(key)) porCidade.set(key, []);
+    porCidade.get(key)!.push(i);
+  });
+
+  if (indicacoes.length === 0) {
+    return (
+      <div className="card p-8 text-center">
+        <div className="w-16 h-16 rounded-full bg-zinc-100 flex items-center justify-center mx-auto mb-4">
+          <svg className="w-8 h-8 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <p className="text-sm text-muted">Nenhum ponto disponível aguardando franqueado no momento.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="card p-4 gradient-brand-subtle">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white/80 flex items-center justify-center">
+            <svg className="w-5 h-5 text-primary-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-sm font-bold text-navy">{indicacoes.length} pontos prontos</p>
+            <p className="text-xs text-muted">Negociados e aguardando alocação de franqueado em {porCidade.size} cidade(s)</p>
+          </div>
+        </div>
+      </div>
+
+      {Array.from(porCidade.entries()).map(([cidade, pontos]) => (
+        <div key={cidade} className="space-y-2">
+          <h3 className="text-sm font-semibold text-navy flex items-center gap-2">
+            <svg className="w-4 h-4 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            </svg>
+            {cidade}
+            <span className="text-xs font-normal text-muted">({pontos.length} ponto{pontos.length > 1 ? "s" : ""})</span>
+          </h3>
+          <div className="space-y-2">
+            {pontos.map((ponto) => (
+              <div key={ponto.id} className="card p-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <p className="font-medium text-navy">{ponto.nomeEstabelecimento}</p>
+                    <p className="text-xs text-muted mt-0.5">{ponto.tipoLocal} · Score {ponto.score} · Captado por {ponto.indicador.nome}</p>
+                    {ponto.franqueado && (
+                      <p className="text-xs mt-1 px-2 py-0.5 inline-block rounded-full bg-green-50 text-green-700 font-medium">
+                        Franqueado: {ponto.franqueado}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex-shrink-0">
+                    {franqueadoEdit?.id === ponto.id ? (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={franqueadoEdit.value}
+                          onChange={(e) => setFranqueadoEdit({ ...franqueadoEdit, value: e.target.value })}
+                          placeholder="Nome do franqueado"
+                          className="input-field text-xs w-40"
+                          autoFocus
+                        />
+                        <button
+                          onClick={() => onAlocar(ponto.id, franqueadoEdit.value)}
+                          disabled={actionLoading || !franqueadoEdit.value}
+                          className="btn-primary text-xs px-3 py-1.5"
+                        >
+                          Salvar
+                        </button>
+                        <button
+                          onClick={() => setFranqueadoEdit(null)}
+                          className="text-xs text-muted hover:text-navy"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setFranqueadoEdit({ id: ponto.id, value: ponto.franqueado || "" })}
+                        className="text-xs px-3 py-1.5 rounded-lg font-medium bg-primary/10 text-primary-dark hover:bg-primary/20 transition-all"
+                      >
+                        {ponto.franqueado ? "Editar" : "Alocar franqueado"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function PipelinePage() {
   const [filtroStatus, setFiltroStatus] = useState("");
   const [filtroCidade, setFiltroCidade] = useState("");
   const [viewMode, setViewMode] = useState<"tabela" | "mapa">("tabela");
   const [page, setPage] = useState(1);
+  const [abaAtiva, setAbaAtiva] = useState<"pipeline" | "disponiveis">("pipeline");
+  const [franqueadoEdit, setFranqueadoEdit] = useState<{ id: string; value: string } | null>(null);
+  const [actionLoading, setActionLoading] = useState(false);
 
   const params = new URLSearchParams();
   if (filtroStatus) params.set("status", filtroStatus);
@@ -189,7 +309,30 @@ export default function PipelinePage() {
         </span>
       </div>
 
+      {/* Abas Pipeline / Disponíveis */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => setAbaAtiva("pipeline")}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${abaAtiva === "pipeline" ? "bg-primary/10 text-primary-dark" : "text-muted hover:bg-zinc-100"}`}
+        >
+          Pipeline
+        </button>
+        <button
+          onClick={() => setAbaAtiva("disponiveis")}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${abaAtiva === "disponiveis" ? "bg-primary/10 text-primary-dark" : "text-muted hover:bg-zinc-100"}`}
+        >
+          Disponíveis para Franqueados
+          {indicacoes.filter((i) => i.status === "AGUARDANDO_FRANQUEADO").length > 0 && (
+            <span className="ml-2 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-secondary/20 text-secondary">
+              {indicacoes.filter((i) => i.status === "AGUARDANDO_FRANQUEADO").length}
+            </span>
+          )}
+        </button>
+      </div>
+
       {/* KPI Cards */}
+      {abaAtiva === "pipeline" && (
+      <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
           title="Total Indicacoes"
@@ -346,6 +489,29 @@ export default function PipelinePage() {
             Próxima
           </button>
         </div>
+      )}
+      </>
+      )}
+
+      {/* Aba Disponíveis */}
+      {abaAtiva === "disponiveis" && (
+        <DisponiveisView
+          indicacoes={indicacoes.filter((i) => i.status === "AGUARDANDO_FRANQUEADO")}
+          franqueadoEdit={franqueadoEdit}
+          setFranqueadoEdit={setFranqueadoEdit}
+          actionLoading={actionLoading}
+          onAlocar={async (id: string, franqueado: string) => {
+            setActionLoading(true);
+            await fetch(`/api/indicacoes/${id}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ franqueado }),
+            });
+            setActionLoading(false);
+            setFranqueadoEdit(null);
+            mutate();
+          }}
+        />
       )}
     </div>
   );

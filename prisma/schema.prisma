@@ -49,6 +49,7 @@ model Indicacao {
   temConcorrente       Boolean
   score                Int
   status               String   @default("INDICADO")
+  franqueado           String?
   dataInstalacao       DateTime?
   faturamentoMensal    Float?
   createdAt            DateTime @default(now())

@@ -62,13 +62,14 @@ export async function PATCH(
     return NextResponse.json({ indicacao: updated });
   }
 
-  const { status, dataInstalacao, faturamentoMensal, fotos } = body;
+  const { status, dataInstalacao, faturamentoMensal, fotos, franqueado } = body;
 
   const data: Record<string, unknown> = {};
   if (status) data.status = status;
   if (dataInstalacao) data.dataInstalacao = new Date(dataInstalacao);
   if (faturamentoMensal !== undefined) data.faturamentoMensal = faturamentoMensal;
   if (fotos) data.fotos = JSON.stringify(fotos);
+  if (franqueado !== undefined) data.franqueado = franqueado;
 
   const indicacao = await prisma.indicacao.update({
     where: { id },
