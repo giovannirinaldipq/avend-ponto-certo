@@ -319,11 +319,17 @@ export default function PipelinePage() {
         </button>
         <button
           onClick={() => setAbaAtiva("disponiveis")}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${abaAtiva === "disponiveis" ? "bg-primary/10 text-primary-dark" : "text-muted hover:bg-zinc-100"}`}
+          className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-all border-2 ${
+            abaAtiva === "disponiveis"
+              ? "bg-secondary/10 text-secondary border-secondary/30"
+              : indicacoes.filter((i) => i.status === "AGUARDANDO_FRANQUEADO").length > 0
+                ? "bg-secondary/5 text-secondary border-secondary/20 hover:bg-secondary/10 animate-pulse"
+                : "text-muted hover:bg-zinc-100 border-transparent"
+          }`}
         >
-          Disponíveis para Franqueados
+          🏪 Disponíveis para Franqueados
           {indicacoes.filter((i) => i.status === "AGUARDANDO_FRANQUEADO").length > 0 && (
-            <span className="ml-2 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-secondary/20 text-secondary">
+            <span className="ml-2 px-2 py-0.5 text-[11px] font-bold rounded-full bg-secondary text-white">
               {indicacoes.filter((i) => i.status === "AGUARDANDO_FRANQUEADO").length}
             </span>
           )}

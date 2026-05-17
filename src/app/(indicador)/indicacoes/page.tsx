@@ -108,6 +108,11 @@ export default function IndicacoesPage() {
                   <Link href={`/indicacoes/${ind.id}`} key={ind.id} className="card p-3.5 block hover:scale-[1.02] transition-transform">
                     <p className="text-sm font-medium text-navy">{ind.nomeEstabelecimento}</p>
                     <p className="text-xs text-muted mt-1">{ind.cidade}/{ind.estado}</p>
+                    {ind.status === "AGUARDANDO_FRANQUEADO" && (
+                      <p className="text-[10px] mt-2 px-2 py-1 rounded-lg bg-secondary/10 text-secondary font-medium">
+                        🏪 Pronto! Aguardando franqueado — clique para indicar
+                      </p>
+                    )}
                     <div className="flex items-center justify-between mt-2.5">
                       <span className="text-[11px] text-muted">
                         {new Date(ind.createdAt).toLocaleDateString("pt-BR")}

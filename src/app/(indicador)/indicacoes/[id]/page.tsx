@@ -21,6 +21,7 @@ type Indicacao = {
   score: number;
   status: string;
   fotos: string;
+  franqueado: string | null;
   createdAt: string;
   faturamentoMensal: number | null;
 };
@@ -33,6 +34,9 @@ export default function IndicacaoDetalhePage() {
   const router = useRouter();
   const [indicacao, setIndicacao] = useState<Indicacao | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [showFranqueadoForm, setShowFranqueadoForm] = useState(false);
+  const [franqueadoForm, setFranqueadoForm] = useState({ nome: "", telefone: "", tipo: "indicar" });
+  const [franqueadoEnviado, setFranqueadoEnviado] = useState(false);
 
   useEffect(() => {
     fetch(`/api/indicacoes/${params.id}`)
@@ -84,6 +88,92 @@ export default function IndicacaoDetalhePage() {
           {indicacao.faturamentoMensal && <div><dt className="text-muted">Faturamento</dt><dd className="text-navy font-medium">R$ {indicacao.faturamentoMensal.toLocaleString("pt-BR")}/mes</dd></div>}
         </dl>
       </div>
+
+      {/* Card Aguardando Franqueado */}
+      {indicacao.status === "AGUARDANDO_FRANQUEADO" && (
+        <div className="card p-5 border-2 border-secondary/30 bg-secondary/5 space-y-4">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-secondary/20 flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <div>
+              <p className="font-semibold text-navy">Ponto pronto! Aguardando franqueado</p>
+              <p className="text-xs text-muted mt-1">
+                Este ponto já foi negociado e está pronto para operar. Só falta um franqueado para colocar a máquina aqui.
+              </p>
+            </div>
+          </div>
+
+          {franqueadoEnviado ? (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
+              <p className="text-sm font-medium text-green-700">Indicação enviada! A equipe AVEND vai entrar em contato.</p>
+            </div>
+          ) : !showFranqueadoForm ? (
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setShowFranqueadoForm(true); setFranqueadoForm({ ...franqueadoForm, tipo: "indicar" }); }}
+                className="btn-secondary text-xs flex-1"
+              >
+                Indicar alguém para ser franqueado
+              </button>
+              <button
+                onClick={() => { setShowFranqueadoForm(true); setFranqueadoForm({ ...franqueadoForm, tipo: "eu" }); }}
+                className="btn-primary text-xs flex-1"
+              >
+                Quero ser franqueado aqui
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3 pt-2 border-t border-secondary/20">
+              <p className="text-xs font-medium text-navy">
+                {franqueadoForm.tipo === "eu" ? "Seus dados para contato:" : "Dados de quem você indica:"}
+              </p>
+              <input
+                type="text"
+                placeholder="Nome completo"
+                value={franqueadoForm.nome}
+                onChange={(e) => setFranqueadoForm({ ...franqueadoForm, nome: e.target.value })}
+                className="input-field text-sm"
+              />
+              <input
+                type="tel"
+                placeholder="Telefone / WhatsApp"
+                value={franqueadoForm.telefone}
+                onChange={(e) => setFranqueadoForm({ ...franqueadoForm, telefone: e.target.value })}
+                className="input-field text-sm"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={async () => {
+                    if (!franqueadoForm.nome || !franqueadoForm.telefone) return;
+                    const msg = franqueadoForm.tipo === "eu"
+                      ? `Captador quer ser franqueado: ${franqueadoForm.nome} - ${franqueadoForm.telefone}`
+                      : `Captador indica franqueado: ${franqueadoForm.nome} - ${franqueadoForm.telefone}`;
+                    await fetch(`/api/indicacoes/${indicacao.id}/comunicacoes`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ tipo: "NOTA", mensagem: msg }),
+                    });
+                    setFranqueadoEnviado(true);
+                    setShowFranqueadoForm(false);
+                  }}
+                  className="btn-primary text-xs flex-1"
+                >
+                  Enviar
+                </button>
+                <button
+                  onClick={() => setShowFranqueadoForm(false)}
+                  className="btn-secondary text-xs"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <ScorePreditivo
         score={indicacao.score}
