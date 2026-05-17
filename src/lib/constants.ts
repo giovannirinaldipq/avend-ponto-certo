@@ -24,3 +24,21 @@ export const STATUS_BADGE: Record<string, string> = Object.fromEntries(
 export const STATUS_COLORS: Record<string, string> = Object.fromEntries(
   STATUS_LIST.map((s) => [s.key, s.color])
 );
+
+// Parcerias
+export const PARCERIA_STATUS_LIST = [
+  { key: "NOVO", label: "Novo", badge: "badge-indicado", color: "#4040bf" },
+  { key: "CONTATO", label: "Contato", badge: "badge-analise", color: "#8b2fc9" },
+  { key: "NEGOCIACAO", label: "Negociação", badge: "badge-negociacao", color: "#00e5c8" },
+  { key: "CONTRATO", label: "Contrato", badge: "badge-aguardando", color: "#1a1145" },
+  { key: "ATIVO", label: "Ativo", badge: "badge-ativo", color: "#00c4ab" },
+  { key: "RECUSADO", label: "Recusado", badge: "badge-recusado", color: "#dc3545" },
+] as const;
+
+export const PARCERIA_STATUS_LABELS: Record<string, string> = Object.fromEntries(
+  PARCERIA_STATUS_LIST.map((s) => [s.key, s.label])
+);
+
+export const PARCERIA_STATUS_BADGE: Record<string, string> = Object.fromEntries(
+  PARCERIA_STATUS_LIST.map((s) => [s.key, s.badge])
+);

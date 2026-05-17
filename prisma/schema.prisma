@@ -95,3 +95,30 @@ model Notificacao {
   link      String?
   createdAt DateTime @default(now())
 }
+
+model Parceria {
+  id            String        @id @default(cuid())
+  tipo          String        // GERAL | REDE
+  nomeEmpresa   String
+  nomeContato   String
+  email         String
+  telefone      String
+  descricao     String?
+  numUnidades   Int?
+  status        String        @default("NOVO")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  unidades      UnidadeRede[]
+}
+
+model UnidadeRede {
+  id            String    @id @default(cuid())
+  parceriaId    String
+  parceria      Parceria  @relation(fields: [parceriaId], references: [id])
+  nome          String
+  endereco      String
+  cidade        String
+  estado        String
+  indicacaoId   String?
+  createdAt     DateTime  @default(now())
+}

@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "Dashboard" },
   { href: "/admin/pipeline", label: "Pipeline" },
   { href: "/admin/indicadores", label: "Captadores" },
+  { href: "/admin/parcerias", label: "Parcerias" },
   { href: "/admin/financeiro", label: "Financeiro" },
   { href: "/admin/investidor", label: "Investidor" },
 ];

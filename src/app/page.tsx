@@ -91,6 +91,44 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Parcerias */}
+        <section className="px-6 py-16 bg-zinc-50">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <div>
+              <h2 className="text-2xl font-bold text-navy">Parcerias Estratégicas</h2>
+              <p className="text-sm text-muted mt-2">Duas formas de crescer junto com a AVEND</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <a href="/parceria" className="card p-8 text-left space-y-4 hover:shadow-lg transition-shadow group">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <svg className="w-6 h-6 text-primary-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-navy group-hover:text-primary-dark transition-colors">Quero ser parceiro</h3>
+                <p className="text-sm text-muted">Tenha seus produtos nas nossas máquinas de vending. Ideal para marcas de alimentos, bebidas e conveniência.</p>
+                <span className="text-sm font-medium text-primary-dark inline-flex items-center gap-1">
+                  Enviar proposta
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </span>
+              </a>
+              <a href="/parceria-rede" className="card p-8 text-left space-y-4 hover:shadow-lg transition-shadow group">
+                <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+                  <svg className="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-navy group-hover:text-secondary transition-colors">Tenho uma rede</h3>
+                <p className="text-sm text-muted">Instale máquinas em todas as suas unidades. Ideal para redes de academias, hospitais, universidades e empresas.</p>
+                <span className="text-sm font-medium text-secondary inline-flex items-center gap-1">
+                  Falar com expansão
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </span>
+              </a>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="gradient-dark px-6 py-8 text-center">
