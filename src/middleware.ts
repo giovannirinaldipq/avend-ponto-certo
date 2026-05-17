@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 
-const PUBLIC_PATHS = ["/", "/login", "/cadastro", "/api/auth/login", "/api/auth/registro"];
+const PUBLIC_PATHS = ["/", "/login", "/cadastro", "/parceria", "/parceria-rede", "/api/auth/login", "/api/auth/registro"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith("/api/auth/"))) {
+    return NextResponse.next();
+  }
+
+  // Permitir POST público em /api/parcerias (formulários da landing)
+  if (pathname === "/api/parcerias" && request.method === "POST") {
     return NextResponse.next();
   }
 

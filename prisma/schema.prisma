@@ -106,6 +106,7 @@ model Parceria {
   telefone      String
   descricao     String?
   numUnidades   Int?
+  indicadorId   String?
   status        String        @default("NOVO")
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt

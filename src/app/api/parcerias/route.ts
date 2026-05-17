@@ -4,11 +4,17 @@ import { getSession } from "@/lib/auth";
 
 export async function GET() {
   const session = await getSession();
-  if (!session || session.role !== "ADMIN") {
-    return NextResponse.json({ error: "Acesso negado" }, { status: 403 });
+  if (!session) {
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  }
+
+  const where: Record<string, unknown> = {};
+  if (session.role === "INDICADOR") {
+    where.indicadorId = session.id;
   }
 
   const parcerias = await prisma.parceria.findMany({
+    where,
     include: { unidades: true },
     orderBy: { createdAt: "desc" },
   });
@@ -17,6 +23,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const session = await getSession();
   const body = await request.json();
   const { tipo, nomeEmpresa, nomeContato, email, telefone, descricao, numUnidades } = body;
 
@@ -37,6 +44,7 @@ export async function POST(request: NextRequest) {
       telefone,
       descricao: descricao || null,
       numUnidades: tipo === "REDE" ? (numUnidades || null) : null,
+      indicadorId: session?.id || null,
       status: "NOVO",
     },
   });
