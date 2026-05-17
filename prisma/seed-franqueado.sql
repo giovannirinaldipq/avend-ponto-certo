@@ -1,0 +1,3 @@
+-- Ponto indicado pelo Carlos aguardando franqueado
+INSERT OR IGNORE INTO Indicacao (id, indicadorId, nomeEstabelecimento, endereco, cidade, estado, tipoLocal, horarioFuncionamento, fluxoPessoas, nomeDecissor, telefoneDecissor, cargoDecissor, interesseDecissor, temEspaco, temEnergia, temConcorrente, score, status, fotos, createdAt, updatedAt) VALUES
+('ind_franq01', 'captador001', 'Shopping Aricanduva - Ala Norte', 'Av. Aricanduva, 5555 - Ala Norte', 'Sao Paulo', 'SP', 'SHOPPING', '10h-22h', 'ALTO', 'Marcos Ribeiro', '(11) 98765-4321', 'Gerente Operacional', 'MUITO_INTERESSADO', 'SIM', 'SIM', 0, 82, 'AGUARDANDO_FRANQUEADO', '[]', datetime('now', '-10 days'), datetime('now'));

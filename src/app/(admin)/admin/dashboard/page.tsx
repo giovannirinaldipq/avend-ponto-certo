@@ -113,21 +113,26 @@ export default function AdminDashboardPage() {
 
       {/* Card Disponíveis para Franqueado */}
       {aguardandoFranqueado > 0 && (
-        <a href="/admin/pipeline" className="card p-5 flex items-center justify-between border-2 border-secondary/30 bg-secondary/5 hover:bg-secondary/10 transition-all animate-fade-in">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-secondary/20 flex items-center justify-center">
-              <span className="text-2xl">🏪</span>
+        <a href="/admin/pipeline" className="block animate-fade-in group">
+          <div className="relative overflow-hidden rounded-2xl border-2 border-secondary/40 bg-gradient-to-r from-secondary/10 via-secondary/5 to-primary/5 p-6 hover:shadow-lg transition-all">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+            <div className="relative flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-secondary/20 border border-secondary/30 flex items-center justify-center shadow-sm">
+                  <span className="text-3xl">🏪</span>
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-navy">Pontos disponíveis para franqueados</p>
+                  <p className="text-sm text-muted mt-0.5">Negociados e prontos para operar — só falta alocar um franqueado</p>
+                  <p className="text-xs text-secondary font-medium mt-1 group-hover:underline">Ver no pipeline →</p>
+                </div>
+              </div>
+              <div className="text-center">
+                <p className="text-5xl font-black text-secondary">{aguardandoFranqueado}</p>
+                <p className="text-[10px] text-muted font-medium uppercase tracking-wider mt-1">unidades</p>
+              </div>
             </div>
-            <div>
-              <p className="font-semibold text-navy">Pontos disponíveis para franqueados</p>
-              <p className="text-xs text-muted mt-0.5">Pontos negociados e prontos para operar — só falta alocar um franqueado</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-3xl font-bold text-secondary">{aguardandoFranqueado}</span>
-            <svg className="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
           </div>
         </a>
       )}
