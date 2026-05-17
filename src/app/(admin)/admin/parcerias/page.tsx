@@ -15,6 +15,13 @@ type UnidadeRede = {
   createdAt: string;
 };
 
+type HistoricoItem = {
+  id: string;
+  tipo: string;
+  mensagem: string;
+  createdAt: string;
+};
+
 type Parceria = {
   id: string;
   tipo: string;
@@ -27,6 +34,7 @@ type Parceria = {
   status: string;
   createdAt: string;
   unidades: UnidadeRede[];
+  historico: HistoricoItem[];
 };
 
 const STATUS_FLOW = ["NOVO", "CONTATO", "NEGOCIACAO", "CONTRATO", "ATIVO"];
@@ -36,6 +44,7 @@ export default function ParceriasPage() {
   const [tab, setTab] = useState<"GERAL" | "REDE">("GERAL");
   const [selected, setSelected] = useState<Parceria | null>(null);
   const [unidadeForm, setUnidadeForm] = useState({ nome: "", endereco: "", cidade: "", estado: "" });
+  const [notaForm, setNotaForm] = useState({ tipo: "NOTA", mensagem: "" });
   const [actionLoading, setActionLoading] = useState(false);
 
   const parcerias = data?.parcerias?.filter((p) => p.tipo === tab) || [];
@@ -68,6 +77,19 @@ export default function ParceriasPage() {
   async function criarPonto(parceriaId: string, unidadeId: string) {
     setActionLoading(true);
     await fetch(`/api/parcerias/${parceriaId}/unidades/${unidadeId}/criar-ponto`, { method: "POST" });
+    setActionLoading(false);
+    mutate();
+  }
+
+  async function addNota(parceriaId: string) {
+    if (!notaForm.mensagem.trim()) return;
+    setActionLoading(true);
+    await fetch(`/api/parcerias/${parceriaId}/historico`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(notaForm),
+    });
+    setNotaForm({ tipo: "NOTA", mensagem: "" });
     setActionLoading(false);
     mutate();
   }
@@ -253,6 +275,69 @@ export default function ParceriasPage() {
                   </div>
                 </div>
               )}
+
+              {/* Histórico / Notas */}
+              <div className="card p-5 space-y-4">
+                <h3 className="font-semibold text-navy text-sm">Histórico</h3>
+
+                {/* Form nova nota */}
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <select
+                      value={notaForm.tipo}
+                      onChange={(e) => setNotaForm({ ...notaForm, tipo: e.target.value })}
+                      className="input-field text-xs w-auto"
+                    >
+                      <option value="NOTA">Nota</option>
+                      <option value="LIGACAO">Ligação</option>
+                      <option value="REUNIAO">Reunião</option>
+                      <option value="EMAIL">Email</option>
+                      <option value="WHATSAPP">WhatsApp</option>
+                    </select>
+                  </div>
+                  <textarea
+                    value={notaForm.mensagem}
+                    onChange={(e) => setNotaForm({ ...notaForm, mensagem: e.target.value })}
+                    placeholder="Registrar atualização sobre esta parceria..."
+                    className="input-field text-sm min-h-[60px]"
+                  />
+                  <button
+                    onClick={() => addNota(selected.id)}
+                    disabled={actionLoading || !notaForm.mensagem.trim()}
+                    className="btn-primary w-full text-sm disabled:opacity-40"
+                  >
+                    Adicionar registro
+                  </button>
+                </div>
+
+                {/* Timeline */}
+                {selected.historico && selected.historico.length > 0 && (
+                  <div className="pt-3 border-t border-border space-y-3">
+                    {selected.historico.map((h) => {
+                      const tipoIcons: Record<string, string> = {
+                        NOTA: "📝", LIGACAO: "📞", REUNIAO: "🤝", EMAIL: "📧", WHATSAPP: "💬", STATUS: "🔄"
+                      };
+                      return (
+                        <div key={h.id} className="flex gap-3">
+                          <div className="flex-shrink-0 w-7 h-7 rounded-full bg-zinc-100 flex items-center justify-center text-xs">
+                            {tipoIcons[h.tipo] || "📝"}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-navy">{h.mensagem}</p>
+                            <p className="text-[10px] text-muted mt-0.5">
+                              {new Date(h.createdAt).toLocaleDateString("pt-BR")} às {new Date(h.createdAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {(!selected.historico || selected.historico.length === 0) && (
+                  <p className="text-xs text-muted text-center py-2">Nenhum registro ainda.</p>
+                )}
+              </div>
             </>
           ) : (
             <div className="card p-5 text-center">

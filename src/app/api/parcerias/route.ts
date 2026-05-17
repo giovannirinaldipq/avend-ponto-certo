@@ -3,23 +3,29 @@ import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 
 export async function GET() {
-  const session = await getSession();
-  if (!session) {
-    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+    }
+
+    const where: Record<string, unknown> = {};
+    if (session.role === "INDICADOR") {
+      where.indicadorId = session.id;
+    }
+
+    const parcerias = await prisma.parceria.findMany({
+      where,
+      include: { unidades: true, historico: { orderBy: { createdAt: "desc" } } },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json({ parcerias });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Erro desconhecido";
+    console.error("GET /api/parcerias error:", message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  const where: Record<string, unknown> = {};
-  if (session.role === "INDICADOR") {
-    where.indicadorId = session.id;
-  }
-
-  const parcerias = await prisma.parceria.findMany({
-    where,
-    include: { unidades: true },
-    orderBy: { createdAt: "desc" },
-  });
-
-  return NextResponse.json({ parcerias });
 }
 
 export async function POST(request: NextRequest) {

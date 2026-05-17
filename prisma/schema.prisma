@@ -111,6 +111,17 @@ model Parceria {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   unidades      UnidadeRede[]
+  historico     HistoricoParceria[]
+}
+
+model HistoricoParceria {
+  id          String   @id @default(cuid())
+  parceriaId  String
+  parceria    Parceria @relation(fields: [parceriaId], references: [id])
+  autorId     String
+  tipo        String   // NOTA, LIGACAO, REUNIAO, EMAIL, WHATSAPP, STATUS
+  mensagem    String
+  createdAt   DateTime @default(now())
 }
 
 model UnidadeRede {
