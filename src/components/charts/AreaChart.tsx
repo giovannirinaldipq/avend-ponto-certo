@@ -9,10 +9,9 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  TooltipProps,
 } from "recharts";
 import { motion } from "framer-motion";
-import { cn, formatCurrency, formatCompact } from "@/lib/design-system";
+import { cn, formatCompact } from "@/lib/design-system";
 import { colors, gradients } from "@/lib/design-system/tokens";
 
 export interface AreaChartDataPoint {

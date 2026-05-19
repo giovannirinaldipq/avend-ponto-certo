@@ -101,7 +101,7 @@ export default function BarChartComponent({
               borderRadius: 12,
               boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
             }}
-            formatter={(value: number) => [formatCompact(value), "Valor"]}
+            formatter={(value) => [formatCompact(Number(value)), "Valor"]}
           />
 
           <Bar
