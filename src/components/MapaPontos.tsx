@@ -32,7 +32,7 @@ type Props = {
   linkPrefix?: string;
 };
 
-export default function MapaPontos({ pontos, height = "400px", linkPrefix = "/admin/validacao" }: Props) {
+export default function MapaPontos({ pontos, height = "400px", linkPrefix = "/gestao-pc2026/validacao" }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
 

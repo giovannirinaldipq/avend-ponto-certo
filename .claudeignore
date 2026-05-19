@@ -1,0 +1,28 @@
+# Dependências - muito grande, não precisa ser lido
+node_modules/
+
+# Build do Next.js - arquivos gerados automaticamente
+.next/
+
+# Arquivos gerados pelo Prisma - muito grandes e auto-gerados
+src/generated/
+
+# Outros arquivos de build
+out/
+build/
+dist/
+
+# Cache e logs
+*.log
+.cache/
+
+# Arquivos de lock (grandes e não precisam ser lidos)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Vercel
+.vercel/
+
+# Git
+.git/

@@ -5,12 +5,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 const NAV_ITEMS = [
-  { href: "/admin/dashboard", label: "Dashboard" },
-  { href: "/admin/pipeline", label: "Pipeline" },
-  { href: "/admin/indicadores", label: "Captadores" },
-  { href: "/admin/parcerias", label: "Parcerias" },
-  { href: "/admin/financeiro", label: "Financeiro" },
-  { href: "/admin/investidor", label: "Investidor" },
+  { href: "/gestao-pc2026/dashboard", label: "Dashboard" },
+  { href: "/gestao-pc2026/pipeline", label: "Pipeline" },
+  { href: "/gestao-pc2026/indicadores", label: "Captadores" },
+  { href: "/gestao-pc2026/parcerias", label: "Parcerias" },
+  { href: "/gestao-pc2026/financeiro", label: "Financeiro" },
+  { href: "/gestao-pc2026/investidor", label: "Investidor" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -33,7 +33,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-50 gradient-dark px-4 py-3 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-6">
-          <Link href="/admin/pipeline" className="flex items-center gap-2">
+          <Link href="/gestao-pc2026/pipeline" className="flex items-center gap-2">
             <span className="text-lg font-bold text-white tracking-tight">Radar <span className="text-primary font-normal text-sm">by Avend</span></span>
             <span className="text-xs font-medium text-primary px-2 py-0.5 rounded-md bg-primary/10">Admin</span>
           </Link>

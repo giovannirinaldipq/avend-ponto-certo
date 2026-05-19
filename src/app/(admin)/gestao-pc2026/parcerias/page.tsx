@@ -74,7 +74,7 @@ export default function ParceriasPage() {
           {parcerias.map((p) => (
             <Link
               key={p.id}
-              href={`/admin/parcerias/${p.id}`}
+              href={`/gestao-pc2026/parcerias/${p.id}`}
               className="card p-4 block transition-all hover:shadow-md hover:border-primary/20"
             >
               <div className="flex items-center justify-between">

@@ -116,7 +116,7 @@ export default function ParceriaDetalhePage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <button onClick={() => router.push("/admin/parcerias")} className="text-sm text-muted hover:text-navy transition-colors">&larr; Voltar para parcerias</button>
+      <button onClick={() => router.push("/gestao-pc2026/parcerias")} className="text-sm text-muted hover:text-navy transition-colors">&larr; Voltar para parcerias</button>
 
       <div className="flex items-start justify-between">
         <div>

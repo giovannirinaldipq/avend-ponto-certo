@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
+  if (pathname.startsWith("/gestao-pc2026") || pathname.startsWith("/api/admin")) {
     if (payload.role !== "ADMIN" && payload.role !== "OPERADOR") {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }

@@ -58,7 +58,7 @@ export default function ValidacaoPage() {
     }
     await fetch(`/api/indicacoes/${params.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     setSaving(false);
-    router.push("/admin/pipeline");
+    router.push("/gestao-pc2026/pipeline");
   }
 
   if (!indicacao) {

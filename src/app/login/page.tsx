@@ -31,7 +31,7 @@ export default function LoginPage() {
     }
 
     if (data.user.role === "ADMIN" || data.user.role === "OPERADOR") {
-      router.push("/admin/pipeline");
+      router.push("/gestao-pc2026/pipeline");
     } else {
       router.push("/dashboard");
     }
